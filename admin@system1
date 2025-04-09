@@ -1,0 +1,13 @@
+[AppStream]
+name=appstream
+baseurl=file:///mnt/pkgs/AppStream
+enabled=1
+gpgcheck=0
+
+[BaseOS]
+name=baseos
+baseurl=file:///mnt/pkgs/BaseOS
+enabled=1
+gpgcheck=0
+
+

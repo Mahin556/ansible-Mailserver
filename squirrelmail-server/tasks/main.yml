@@ -1,0 +1,80 @@
+---
+#- name: ADDING A EPEL & REMI REPO TO REMOTE SYSTEM
+  #include_tasks: repo-config.yml
+
+- name: INSTALLING A WEBSERVER AND PHP PACHAGES
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ pkgs }}"
+  notify: 
+    - restart httpd
+    - restart php-fpm
+
+- name: CREATING A DOCUMENT ROOT FOR SQUIRRELMAIL
+  file:
+    path: "{{ doc_root }}"
+    state: directory
+
+# DOWNLOAD
+#- name: DOWNLOADING A SQUIRRELMAIL FROM INTERNET
+#    #get_url:
+#       #url: https://squirrelmail.org/countdl.php?fileurl=http%3A%2F%2Fsnapshots.squirrelmail.org%2Fsquirrelmail-20250320_0200-SVN.stable.tar.gz
+#       #dest: /var/www/html/webmail.tar.gz
+
+# DOWNLOAD + UNARCHIVE
+- name: DOWNLOADING A SQUIRRELMAIL.....
+  unarchive:
+    src: squirrelmail.tar.gz
+    dest: /var/tmp/
+    remote_src: false
+    creates: "/var/tmp/squirrelmail.stable/"
+  notify: restart php-fpm
+
+- name: CREATING A SQUIRRELMAIL CONFIGURATIONS
+  copy:
+    src: /var/tmp/squirrelmail.stable/squirrelmail/
+    dest: "{{ doc_root }}"
+    remote_src: yes
+  notify: restart php-fpm
+
+- name: GENERATING A SSL CERTIFICATE AND PRIVATE KEY FOR WBESITE
+  include_tasks: ssl.yml
+
+- name: CONFIGURING A VIRTUAL HOST FOR SQUIRRELMAIL
+  template:
+    src: virtual_host.conf.j2
+    dest: "/etc/httpd/conf.d/{{ domain }}.conf"
+  notify: restart httpd
+
+- name: CONFIGURING A SQUIRRELMAIL
+  template:
+    src: config.php.j2
+    dest: "{{ doc_root }}/config/config.php"
+  notify: restart php-fpm
+
+- name: CREATING ATTACH DIRECTORY AT SQUIRRELMAIL CONF DIR
+  file:
+    path: "{{ doc_root }}/attach"
+    state: directory
+
+- name: CHANGING PERMISSIONS OF SQUIRRELMAIL DOCUMENT ROOT
+  file:
+    path: "{{  doc_root }}"
+    mode: "0775"
+    owner: apache
+    group: apache
+    recurse: yes
+    state: directory
+
+- name: STARTING A FIREWALLD
+  service:
+    name: firewalld
+    state: restarted
+    enabled: true
+  notify: config firewall rules
+
+- name: CONFIGURING A SELINUX
+  selinux:
+    policy: targeted
+    state: permissive

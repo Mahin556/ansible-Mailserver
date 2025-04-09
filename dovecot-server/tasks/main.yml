@@ -1,0 +1,43 @@
+---
+- name: INSTALLING A REQUIRED PACKAGES
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ pkgs }}"
+  notify: restart dovecot
+
+- name: TEMPLATING A DOVECOT SERVER
+  template:
+    src: dovecot.conf.j2
+    dest: /etc/dovecot/dovecot.conF
+  notify: restart dovecot
+
+- name: TEMPLATING A 10-MAIL FILE
+  template:
+    src: 10-mail.conf.j2
+    dest: /etc/dovecot/conf.d/10-mail.conf
+  notify: restart dovecot
+
+- name: TAMPLATING A 10-AUTH FILE
+  template:
+    src: 10-auth.conf.j2
+    dest: /etc/dovecot/conf.d/10-auth.conf
+  notify: restart dovecot
+
+- name: TEMPLATING A 10-MASTER FILE
+  template:
+    src: 10-master.conf.j2
+    dest: /etc/dovecot/conf.d/10-master.conf
+  notify: restart dovecot
+
+- name: STARTING A FIREWALLD
+  service:
+    name: firewalld
+    state: restarted
+    enabled: true
+  notify: config firewall rules
+
+- name: SELINUX
+  selinux:
+    policy: targeted
+    state: permissive

@@ -1,0 +1,7 @@
+---
+pkgs:
+  - httpd
+  - php
+  - php-gd
+  - php-mysqlnd
+    # - php80-php-imap

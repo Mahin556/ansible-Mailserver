@@ -1,0 +1,22 @@
+---
+- name: restart httpd
+  service:
+    name: httpd
+    state: restarted
+    enabled: true
+
+- name: restart php-fpm
+  service:
+    name: php-fpm
+    state: restarted
+    enabled: true
+
+- name: config firewall rules
+  firewalld:
+    service: "{{ item }}"
+    state: enabled
+    immediate: true
+    permanent: true
+  loop:
+    - http
+    - https

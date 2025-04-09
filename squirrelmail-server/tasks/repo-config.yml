@@ -1,0 +1,31 @@
+--- 
+- name: adding --> epel.repo  
+  template:
+    src: epel.repo.j2 
+    dest: /etc/yum.repos.d/epel.repo
+
+- name: adding --> epel-cisco-openh264
+  template:
+    src: epel-cisco-openh264.repo.j2 
+    dest: /etc/yum.repos.d/epel-cisco-openh264
+
+- name: adding --> epel-testing.repo
+  template:
+    src: epel-testing.repo.j2
+    dest: /etc/yum.repos.d/epel-testing.repo
+
+- name: adding --> remi.repo
+  template:
+    src: remi.repo.j2 
+    dest: /etc/yum.repos.d/remi.repo
+
+- name: adding --> remi-modular.repo
+  template:
+    src: remi-modular.repo.j2   
+    dest: /etc/yum.repos.d/remi-modular.repo
+
+- name: adding --> remi-safe.repo
+  template:
+    src: remi-safe.repo.j2 
+    dest: /etc/yum.repos.d/remi-safe.repo
+

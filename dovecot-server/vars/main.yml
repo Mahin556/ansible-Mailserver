@@ -1,0 +1,10 @@
+---
+
+main_dir: "maildir:~/Maildir"
+
+protocols:
+  - pop3
+  - imap
+  - lmtp
+
+disable_planetext_auth: "yes"

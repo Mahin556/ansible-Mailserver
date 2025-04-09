@@ -1,0 +1,14 @@
+---
+- name: config firewall rules
+  firewalld:
+    service: smtp
+    state: enabled
+    immediate: true
+    permanent: true
+
+- name: restart postfix
+  service:
+    name: postfix
+    state: restarted
+    enabled: true
+

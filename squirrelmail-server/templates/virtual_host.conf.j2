@@ -1,0 +1,22 @@
+<virtualhost *:443> 
+servername {{ domain }}
+serveralias www.{{ domain }}
+documentroot {{ doc_root }} 
+sslengine on
+sslcertificatefile {{ ssl_cert_path }} 
+sslcertificatekeyfile {{ ssl_key_path }}
+
+alias /mail {{ doc_root }} 
+<directory {{ doc_root }}> 
+options indexes followsymlinks  
+allowoverride none
+require all granted
+directoryindex index.php 
+</directory>
+</virtualhost>
+<virtualhost *:80>
+servername {{ domain }}
+serveralias www.{{ domain }}
+redirect permanent / https://{{ domain }}
+</virtualhost>
+

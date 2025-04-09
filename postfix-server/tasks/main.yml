@@ -1,0 +1,25 @@
+---
+- name: INSTALLING A REQUIRED PACKAGES
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ pkgs }}"
+  notify: restart postfix
+
+- name: CREATING A /etc/postfix/main.cf file
+  template:
+    src: main.cf.j2
+    dest: /etc/postfix/main.cf
+  notify: restart postfix
+
+- name: STARTING A FIREWALLD
+  service:
+    name: postfix
+    state: restarted
+    enabled: true
+  notify: config firewall rules
+
+- name: SELINUX
+  selinux:
+    policy: targeted
+    state: permissive

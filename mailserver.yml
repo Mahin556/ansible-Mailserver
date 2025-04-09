@@ -1,5 +1,23 @@
 ---
 - name: configuring a mail server
-  hosts: system1
-  roles:
-    - /root/mahin/Servers-with-ansible/mail-server/mailservers
+  hosts: mail-server
+  become: true
+  gather_facts: true
+  tasks:
+  - name: CONFIGURING A POSTFIX SERVER
+    include_role:
+      name: postfix-server 
+  
+  - name: Force all notified handlers to run at this point
+    ansible.builtin.meta: flush_handlers
+
+  - name: CONFIGURING A DOVECOT SERVER
+    include_role:
+      name: dovecot-server
+
+  - name: Force all notified handlers to run at this point
+    ansible.builtin.meta: flush_handlers
+
+  - name: CONFIGURING A SQUIRRELMAIL SERVER
+    include_role:
+      name: squirrelmail-server

@@ -1,0 +1,5 @@
+---
+domain: "webmail.com"
+doc_root: "/var/www/html/webmail"
+ssl_key_path: "/etc/pki/tls/private/{{ domain }}.key"
+ssl_cert_path: "/etc/pki/tls/certs/{{ domain }}.crt"
