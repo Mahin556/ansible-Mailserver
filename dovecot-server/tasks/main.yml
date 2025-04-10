@@ -9,7 +9,7 @@
 - name: TEMPLATING A DOVECOT SERVER
   template:
     src: dovecot.conf.j2
-    dest: /etc/dovecot/dovecot.conF
+    dest: /etc/dovecot/dovecot.conf
   notify: restart dovecot
 
 - name: TEMPLATING A 10-MAIL FILE
